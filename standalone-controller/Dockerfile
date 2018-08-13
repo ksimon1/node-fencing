@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # image is based on agent-image to include all fence-agent scripts for metadata parsing
-FROM quay.io/bronhaim/agent-image
+FROM registry.hub.docker.com/nodefencing/agent-image
 
 ADD _output/bin/node-fencing-controller /
 

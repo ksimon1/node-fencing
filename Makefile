@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ifeq ($(REGISTRY),)
-	REGISTRY = quay.io/bronhaim/
+	REGISTRY = nodefencing/
 endif
 
 ifeq ($(VERSION),)
@@ -21,25 +21,26 @@ ifeq ($(VERSION),)
 endif
 
 IMAGE_CONTROLLER = $(REGISTRY)standalone-fence-controller:$(VERSION)
+CONTROLLER_PATH = standalone-controller/
 IMAGE_AGENT = $(REGISTRY)agent-image:$(VERSION)
+AGENT_PATH = agent-job-image/
 
 .PHONY: all controller clean test
 
 all: controller
 
-controller:
-	go build -i -o standalone-controller/_output/bin/node-fencing-controller cmd/node-fencing-controller.go
+agent:
 	go build -o agent-job-image/plugged-fence-agents/fetch_passwd cmd/fetch-password.go
+	docker build -t $(IMAGE_AGENT) $(AGENT_PATH)
+	sudo docker push $(IMAGE_AGENT)
+
+controller: agent
+	go build -i -o standalone-controller/_output/bin/node-fencing-controller cmd/node-fencing-controller.go
+	docker build -t $(IMAGE_CONTROLLER) $(CONTROLLER_PATH)
+	sudo docker push $(IMAGE_CONTROLLER)
 
 clean:
 	-rm -rf _output
-
-images: controller
-	docker build -t $(IMAGE_CONTROLLER) standalone-controller
-	docker tag $(IMAGE_CONTROLLER) $(IMAGE_CONTROLLER)
-	docker build -t $(IMAGE_AGENT) agent-job-image
-	docker tag $(IMAGE_AGENT) $(IMAGE_AGENT)
-
 
 test:
 	go test `go list ./... | grep -v 'vendor'`

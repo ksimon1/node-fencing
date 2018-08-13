@@ -38,7 +38,7 @@ const (
 	giveupRetries      = 5
 	clusterPolicies    = ""
 
-	jobImageName     = "quay.io/bronhaim/agent-image"
+	jobImageName     = "registry.hub.docker.com/nodefencing/agent-image"
 	workingNamespace = "default"
 )
 

@@ -83,7 +83,7 @@ spec:
       serviceAccountName: fence-controller
       containers:
         - name: standalone-fence-controller
-          image: "quay.io/bronhaim/standalone-fence-controller:latest"
+          image: "registry.hub.docker.com/nodefencing/standalone-fence-controller:latest"
           imagePullPolicy: Always
 ---
 # RBAC for fence agent pod
